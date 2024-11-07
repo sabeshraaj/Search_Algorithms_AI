@@ -1,13 +1,10 @@
 #include<bits/stdc++.h>
 using namespace std;
-//Branch and bound
-vector<int>h;
 int n;
-int beamwidth;
 vector<vector<int>>adj[7];
 void printpath(vector<int>path)
 {
-    cout<<"path : "<<" ";
+    cout<<"path : "<<endl;
     for(auto it:path)
         {
             cout<<it<<" ";
@@ -18,22 +15,24 @@ void branch()
 {
     vector<bool>vis(n,false);
     vector<int>dist(n,1e9);
-    int cur=0;//start
+    int cur=0;
     int goal=6;
-    set<tuple<int,int,vector<int>>>st;
-    st.insert({0,0,{0}});
+    set<pair<int,vector<int>> >st;
+    st.insert({0,{0}});
     while(!st.empty())
     {
-       auto[dis,elem,path]=*st.begin();
-       st.erase(st.begin());
+        int dis=st.begin()->first;
+        vector<int>path=st.begin()->second;
+        int elem=path.back();
+        st.erase(st.begin());
         if(vis[elem]){continue;}
         vis[elem]=true;
         dist[elem]=dis;
-        cout<<"Node: "<<elem<<endl;
+        cout<<"node : "<<elem<<endl;
         printpath(path);
         if(elem==goal)
         {
-            cout<<"goal reached,the final path is"<<endl;
+            cout<<"the goal has been reached"<<endl;
             printpath(path);
             return;
         }
@@ -42,7 +41,7 @@ void branch()
             int edw=it[1]; int node=it[0];
             vector<int>np=path;
             np.push_back(node);
-            st.insert({dis+edw,node,np});
+            st.insert({dis+edw,np});
         }
     }
     cout<<"path not found"<<endl;
@@ -54,7 +53,6 @@ void ae(int u,int v,int wt=1)
 }
 int main()
 {
-    h={4,3,3,1,1,1,0};
     ae(0,1);
     ae(0,2);
     ae(1,3);
@@ -64,7 +62,6 @@ int main()
     ae(4,6);
     ae(5,6);
     n=7;
-    cout<<"Branch and bound algorithm : "<<endl;
-    beamwidth=2;
+    cout<<"branch and bound algorithm : "<<endl;
     branch();
 }
