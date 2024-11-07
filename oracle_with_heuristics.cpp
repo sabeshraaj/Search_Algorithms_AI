@@ -19,14 +19,16 @@ void orach()
     vector<int>dist(n,1e9);
     int cur=0;
     int goal=6;
-    set<tuple<int,int,vector<int>>>st;
-    st.insert({0,0,{0}});
+    set<pair<int,pair<int,vector<int>>>>st;
+    st.insert({0,{0,{0}}}); //dis,elem,path
     int cnt=0;
     int maxcnt=9;
     while(!st.empty()&&cnt<maxcnt)
     {
-       auto[dis,elem,path]=*st.begin();
-       st.erase(st.begin());
+        auto[dis,path1]=*st.begin();
+        int elem=path1.first;
+        vector<int>path=path1.second;
+        st.erase(st.begin());
         if(vis[elem]){continue;}
         vis[elem]=true;
         dist[elem]=dis;
@@ -41,7 +43,7 @@ void orach()
             int edw=it[1]; int node=it[0];
             vector<int>np=path;
             np.push_back(node);
-            st.insert({dis+edw+h[node],node,np});
+            st.insert({dis+edw+h[node],{node,np}});
             if(node==goal)
             {
                 cnt++;
