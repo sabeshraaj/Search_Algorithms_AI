@@ -2,17 +2,14 @@
 using namespace std;
 vector<int>h;
 int n;
-int oracle;
-int beamwidth;
 vector<vector<int>>adj[7];
 void printpath(vector<int>path)
 {
-    cout<<"path : "<<" ";
+    cout<<"path : "<<endl;
     for(auto it:path)
         {
             cout<<it<<" ";
         }
-    cout<<endl;
     cout<<endl;
 }
 void astar()
@@ -21,36 +18,33 @@ void astar()
     vector<int>dist(n,1e9);
     int cur=0;
     int goal=6;
-    set<tuple<int,int,int,vector<int>>>st;
-    st.insert({0+h[0],0,0,{0}});
+    set<pair<int, pair<int, pair<int, vector<int>>>>> st;
+    st.insert({0 + h[0], {0, {0, {0}}}});
     int cnt=0;
     int maxcnt=9;
     while(!st.empty()&&cnt<maxcnt)
     {
-       auto[tot,dis,elem,path]=*st.begin();
-       st.erase(st.begin());
+        auto [tot, dis_elem_path] = *st.begin();
+        auto [dis, elem_path] = dis_elem_path;
+        int elem = elem_path.first;
+        vector<int> path = elem_path.second;
+        st.erase(st.begin());
         if(vis[elem]){continue;}
         vis[elem]=true;
         dist[elem]=dis;
-        cout<<"node: "<<elem<<" total(dist+heurisitc): "<<tot<<endl;
+        cout<<"node : "<<elem<<" dis+heur : "<<tot<<endl;
         printpath(path);
         if(elem==goal)
         {
-            cout<<"goal reached, the final path:"<<endl;
             printpath(path);
             return;
         }
         for(auto it:adj[elem])
         {
             int edw=it[1]; int node=it[0];
-            int curcost=edw+h[node];
             vector<int>np=path;
             np.push_back(node);
-            st.insert({tot+curcost,curcost,node,np});
-            if(node==goal)
-            {
-                cnt++;
-            }
+            st.insert({dis+edw+h[node],{dis+edw,{node,np}}});
         }
     }
     cout<<"path not found"<<endl;
@@ -62,7 +56,6 @@ void ae(int u,int v,int wt=1)
 }
 int main()
 {
-    oracle=100;
     h={4,3,3,1,1,1,0};
     ae(0,1);
     ae(0,2);
@@ -73,7 +66,6 @@ int main()
     ae(4,6);
     ae(5,6);
     n=7;
-    beamwidth=2;
-    cout<<"a* algorithm : "<<endl;
+    cout<<"A* algorithm : "<<endl;
     astar();
 }
